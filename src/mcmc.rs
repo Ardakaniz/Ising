@@ -15,7 +15,7 @@ impl<'a> MCMC<'a> {
 			lattice,
 			temperature,
 			rng: rand::thread_rng(),
-			spin_id_distrib: Uniform::new(0, LATTICE_SIZE*LATTICE_SIZE)
+			spin_id_distrib: Uniform::new(0, LATTICE_SIZE)
 		}
 	}
 
@@ -24,7 +24,6 @@ impl<'a> MCMC<'a> {
 			let i = self.spin_id_distrib.sample(&mut self.rng);
 			let j = self.spin_id_distrib.sample(&mut self.rng);
 			
-			let (i, j) = self.lattice.flip_random_spin();
 			let energy_diff = self.lattice.energy_diff(i, j);
 
 			if energy_diff < 0.0 {

@@ -3,7 +3,7 @@ use crate::spin::Spin;
 use rand::{thread_rng, Rng};
 use std::fmt;
 
-pub const LATTICE_SIZE: usize = 50;
+pub const LATTICE_SIZE: usize = 20;
 
 #[derive(Debug, Clone)]
 pub struct Lattice {
