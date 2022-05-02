@@ -7,21 +7,21 @@ pub const LATTICE_SIZE: usize = 20;
 
 #[derive(Debug, Clone)]
 pub struct Lattice {
-	spins: [Spin; LATTICE_SIZE*LATTICE_SIZE],
+	spins: Vec<Spin>,
 	j: f64,
-	mag_field: f64,
+	pub h: f64,
 }
 
 impl Lattice {
-	pub fn new() -> Self {
+	pub fn new(j: f64) -> Self {
 		let mut rng = thread_rng();
-		let mut spins = [false; LATTICE_SIZE*LATTICE_SIZE];
+		let mut spins: Vec<bool> = vec![false; LATTICE_SIZE * LATTICE_SIZE];
 		rng.fill(&mut spins[..]);
 
 		Lattice {
-			spins: spins.map(|b| Spin::from(b)),
-			j: 1.0, // Ferromagnetic
-			mag_field: 0.00, // No magnetic field
+			spins: spins.iter().map(|b| Spin::from(*b)).collect(),
+			j,
+			h: 0.0, // No magnetic field
 		}
 	}
 
@@ -53,7 +53,7 @@ impl Lattice {
 
 				energy += self.j * (spin_i * (spin_j_right + spin_j_up)) as f64;
 
-				energy += self.mag_field * spin_i as f64;
+				energy += self.h * spin_i as f64;
 			}
 		}
 
@@ -78,7 +78,7 @@ impl Lattice {
 			neigbour_spins += i32::from(self.spins[(j - 1) * LATTICE_SIZE + i]);
 		}
 		
-		2.0 * (self.j * (neigbour_spins as f64) + self.mag_field) * i32::from(self.spins[j * LATTICE_SIZE + i]) as f64
+		2.0 * (self.j * (neigbour_spins as f64) + self.h) * i32::from(self.spins[j * LATTICE_SIZE + i]) as f64
 	}
 }
 
