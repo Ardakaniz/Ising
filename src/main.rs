@@ -1,19 +1,27 @@
 mod lattice;
-mod mcmc;
 mod spin;
+mod mcmc;
+mod measurement;
 
 use lattice::Lattice;
 use mcmc::MCMC;
+use measurement::Measurement;
 
-fn main() {
-	println!("Hello, world!");
+fn main() -> std::io::Result<()> {
+	let mut lattice = Lattice::new(mcmc::K_B);
+	let mut mcmc = MCMC::new(&mut lattice);
+	let mut measurement = Measurement::new(&mut mcmc, "parameters.json");
 
-	let mut lattice = Lattice::new();
-	let mut mcmc = MCMC::new(&mut lattice, 1.0);
+	use std::time::Instant;
+	let start = Instant::now();
 	
-	mcmc.show_lattice();
-	for _ in 0..100 {
-		mcmc.sweep();
-	}
-	mcmc.show_lattice();
+	measurement.setup();
+	measurement.run();
+
+	let elapsed = start.elapsed();
+	println!("Total time exceeded: {:?}", elapsed);
+
+	measurement.save("out")?;
+
+	Ok(())
 }

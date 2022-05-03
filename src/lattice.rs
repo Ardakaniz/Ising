@@ -3,7 +3,7 @@ use crate::spin::Spin;
 use rand::{thread_rng, Rng};
 use std::fmt;
 
-pub const LATTICE_SIZE: usize = 20;
+pub const LATTICE_SIZE: usize = 500;
 
 #[derive(Debug, Clone)]
 pub struct Lattice {
@@ -25,6 +25,10 @@ impl Lattice {
 		}
 	}
 
+	pub fn get_spins(&self) -> &Vec<Spin> {
+		&self.spins
+	}
+
 	pub fn flip_spin(&mut self, i: usize, j: usize) {
 		self.spins[j*LATTICE_SIZE + i].flip();
 	}
@@ -40,7 +44,7 @@ impl Lattice {
 	}
 
 	/* 
-		* H = -J Σ(σ_i*σ_j) - B Σ(σ_i)
+		* H = -J Σ(σ_i*σ_j) - h Σ(σ_i)
 	*/
 	pub fn energy(&self) -> f64 {
 		let mut energy = 0.0;
